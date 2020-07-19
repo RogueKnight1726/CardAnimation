@@ -169,7 +169,8 @@ class HomeController: UIViewController{
     @objc func panDetected(sender: UIPanGestureRecognizer){
         let location = sender.location(in: self.view)
         
-        
+        //Three animation methods are added, each with conditional statements. This is done because there is subtle change in the timing for each of the animation.
+        //It is better to use th if statements inside the UIView.animate methods than the other way around, because this is more readable.
         
         UIView.animate(withDuration: 0.05) {
             self.cardOne.center = location
@@ -207,13 +208,13 @@ class HomeController: UIViewController{
 
 extension HomeController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return HalfSizePresentationController(presentedViewController: presented, presenting: presenting)
+        return PartialScreenPresentationController(presentedViewController: presented, presenting: presenting)
     }
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return Dismisser()
     }
 }
-class HalfSizePresentationController : UIPresentationController {
+class PartialScreenPresentationController : UIPresentationController {
     override var frameOfPresentedViewInContainerView: CGRect {
         get {
             guard let theView = containerView else {
@@ -230,7 +231,6 @@ private class Dismisser: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.3
     }
-    
     
  
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
