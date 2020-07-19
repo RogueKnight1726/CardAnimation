@@ -19,14 +19,14 @@ class HomeController: UIViewController{
     let backgroundColor = UIColor(red: 0.96, green: 0.97, blue: 1.00, alpha: 1.00)
     let textColor = UIColor(red: 0.64, green: 0.71, blue: 0.78, alpha: 1.00)
     var blurView: UIVisualEffectView!
-    
+    let backgroundImageView = UIImageView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let guide = view.safeAreaLayoutGuide
         view.backgroundColor = backgroundColor
         
-        let backgroundImageView = UIImageView()
+        
         view.addSubview(backgroundImageView)
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         [backgroundImageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 0),
@@ -105,9 +105,38 @@ class HomeController: UIViewController{
     }
     
     @objc func tapDetected(sender: UITapGestureRecognizer){
+        
+        let cardThreeLayer = cardThree.layer
+        let cardTwoLayer = cardTwo.layer
+        var rotationAndPerspectiveTransform = CATransform3DIdentity
+        rotationAndPerspectiveTransform.m34 = 1.0 / -500
+        let cardThreePerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 45.0 * .pi / 180.0, 1.0, 0, 0.0)
+        let cardThreeLiftUpTransform = CATransform3DTranslate(cardThreePerspectiveTransform, (self.view.bounds.width / 2) - 50,-400, -50)
+        
+        let cardTwoPerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 35.0 * .pi / 180.0, 1.0, 0, 0.0)
+        let cardTwoLiftUpTransofrm = CATransform3DTranslate(cardTwoPerspectiveTransform, (self.view.bounds.width / 2) - 50,-170, -50)
+        
+        UIView.animate(withDuration: 0.1, delay: 0, options: [], animations: {
+            self.cardTwo.transform = CGAffineTransform.identity.concatenating(CGAffineTransform.init(translationX: (self.view.bounds.width / 2) - 50, y: 90))
+            self.cardThree.transform = CGAffineTransform.identity.concatenating(CGAffineTransform.init(translationX: (self.view.bounds.width / 2) - 50, y: 90))
+        }) { (_) in
+            UIView.animate(withDuration: 0.3, delay: 0, options: [], animations: {
+                cardThreeLayer.transform = cardThreeLiftUpTransform
+                cardTwoLayer.transform = cardTwoLiftUpTransofrm
+                self.view.transform = CGAffineTransform.init(translationX: 0, y: -self.view.bounds.height / 8)
+                self.backgroundImageView.alpha = 0
+            }, completion: nil)
+        }
+        
+        
         let detailController = DetailController()
         detailController.modalPresentationStyle = .custom
+        detailController.transitioningDelegate = self
+        detailController.isModalInPresentation = true
+        self.present(detailController, animated: true, completion: nil)
     }
+    
+    
     
     
     
@@ -150,3 +179,41 @@ class HomeController: UIViewController{
 }
 
 
+extension HomeController: UIViewControllerTransitioningDelegate {
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return HalfSizePresentationController(presentedViewController: presented, presenting: presenting)
+    }
+    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return Dismisser()
+    }
+}
+class HalfSizePresentationController : UIPresentationController {
+    override var frameOfPresentedViewInContainerView: CGRect {
+        get {
+            guard let theView = containerView else {
+                return CGRect.zero
+            }
+
+            return CGRect(x: 0, y: 0, width: theView.bounds.width, height: theView.bounds.height)
+        }
+    }
+}
+
+private class Dismisser: NSObject, UIViewControllerAnimatedTransitioning {
+ 
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return 0.3
+    }
+    
+    
+ 
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let container = transitionContext.containerView
+        let fromView = transitionContext.view(forKey: .from)!
+        UIView.animate(withDuration: 0.3, animations: {
+            fromView.frame.origin.y += container.frame.height - fromView.frame.minY
+        }) { (completed) in
+            transitionContext.completeTransition(completed)
+        }
+    }
+}
