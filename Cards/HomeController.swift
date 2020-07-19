@@ -67,12 +67,7 @@ class HomeController: UIViewController{
          cardThree.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
          cardThree.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0)].forEach({$0.isActive = true})
         cardThree.layer.anchorPoint = CGPoint.init(x: 1, y: 1)
-        let cardOneAngle = 10 / 180.0 * CGFloat.pi
-        let transformOne = CGAffineTransform.init(translationX: 140, y: 40)
-        let transformScaleOne = CGAffineTransform.init(scaleX: 0.80, y: 0.80)
-        let transformRotateOne = CGAffineTransform.init(rotationAngle: cardOneAngle)
-        let finalTransform = transformOne.concatenating(transformRotateOne).concatenating(transformScaleOne)
-        cardThree.transform = finalTransform
+        applyCardThreeInitialTransformState()
         
         view.addSubview(cardTwo)
         cardTwo.translatesAutoresizingMaskIntoConstraints = false
@@ -81,12 +76,7 @@ class HomeController: UIViewController{
          cardTwo.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
          cardTwo.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0)].forEach({$0.isActive = true})
         cardTwo.layer.anchorPoint = CGPoint.init(x: 1, y: 1)
-        let angleInRadians = 5 / 180.0 * CGFloat.pi
-        let transform = CGAffineTransform.init(translationX: 150, y: 68)
-        let cardTwoScale = CGAffineTransform.init(scaleX: 0.90, y: 0.90)
-        let cardTwoRotation = CGAffineTransform.init(rotationAngle: angleInRadians)
-        let cardTwoFinalTransform = transform.concatenating(cardTwoRotation).concatenating(cardTwoScale)
-        cardTwo.transform = cardTwoFinalTransform
+        applyCardTwoInitialTransform()
         
         view.addSubview(cardOne)
         cardOne.translatesAutoresizingMaskIntoConstraints = false
@@ -102,6 +92,36 @@ class HomeController: UIViewController{
         
         let panGesture = UIPanGestureRecognizer.init(target: self, action: #selector(panDetected(sender:)))
         view.addGestureRecognizer(panGesture)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(recievedDismissNotification), name: Notification.Name(NotificationNames.DetailDismiss.rawValue), object: nil)
+    }
+    
+    
+    func applyCardThreeInitialTransformState(){
+        let cardOneAngle = 10 / 180.0 * CGFloat.pi
+        let transformOne = CGAffineTransform.init(translationX: 140, y: 40)
+        let transformScaleOne = CGAffineTransform.init(scaleX: 0.80, y: 0.80)
+        let transformRotateOne = CGAffineTransform.init(rotationAngle: cardOneAngle)
+        let finalTransform = transformOne.concatenating(transformRotateOne).concatenating(transformScaleOne)
+        cardThree.transform = finalTransform
+    }
+    
+    func applyCardTwoInitialTransform(){
+        let angleInRadians = 5 / 180.0 * CGFloat.pi
+        let transform = CGAffineTransform.init(translationX: 150, y: 68)
+        let cardTwoScale = CGAffineTransform.init(scaleX: 0.90, y: 0.90)
+        let cardTwoRotation = CGAffineTransform.init(rotationAngle: angleInRadians)
+        let cardTwoFinalTransform = transform.concatenating(cardTwoRotation).concatenating(cardTwoScale)
+        cardTwo.transform = cardTwoFinalTransform
+    }
+    
+    @objc func recievedDismissNotification(){
+        UIView.animate(withDuration: 0.1, delay: 0, options: [.curveEaseOut], animations: {
+            self.view.transform = .identity
+            self.applyCardThreeInitialTransformState()
+            self.applyCardTwoInitialTransform()
+            self.backgroundImageView.alpha = 1
+        }, completion: nil)
     }
     
     @objc func tapDetected(sender: UITapGestureRecognizer){

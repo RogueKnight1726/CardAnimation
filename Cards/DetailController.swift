@@ -86,6 +86,11 @@ class DetailController: UIViewController{
         }
         self.dismiss(animated: true, completion: nil)
     }
+    
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        NotificationCenter.default.post(name: Notification.Name(NotificationNames.DetailDismiss.rawValue), object: nil)
+        super.dismiss(animated: flag, completion: completion)
+    }
 }
 
 extension DetailController: UIGestureRecognizerDelegate{
