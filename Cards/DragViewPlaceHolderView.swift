@@ -17,11 +17,11 @@ class DragViewPlaceHolderView: UIView{
         self.addSubview(handle)
         handle.translatesAutoresizingMaskIntoConstraints = false
         [handle.widthAnchor.constraint(equalToConstant: 80),
-         handle.heightAnchor.constraint(equalToConstant: 10),
+         handle.heightAnchor.constraint(equalToConstant: 6),
          handle.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 0),
          handle.topAnchor.constraint(equalTo: self.topAnchor, constant: 10)].forEach({$0.isActive = true})
-        handle.backgroundColor = .lightGray
-        handle.layer.cornerRadius = 5
+        handle.backgroundColor = UIColor(red: 0.73, green: 0.78, blue: 0.81, alpha: 1.00)
+        handle.layer.cornerRadius = 3
         handle.clipsToBounds = true
         
     }

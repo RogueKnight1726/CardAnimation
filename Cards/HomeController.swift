@@ -16,8 +16,8 @@ class HomeController: UIViewController{
     let cardOne = BaseImageView.init(with: UIColor(red: 0.62, green: 0.87, blue: 0.98, alpha: 1.00), circular: false, shadow: false, borderColor: nil, borderThickness: nil)
     let cardTwo = BaseView.init(with: UIColor(red: 0.28, green: 0.24, blue: 0.36, alpha: 0.8), circular: false, shadow: false, borderColor: nil, borderThickness: nil)
     let cardThree = BaseView.init(with: UIColor(red: 0.91, green: 0.22, blue: 0.37, alpha: 0.6), circular: false, shadow: false, borderColor: nil, borderThickness: nil)
-    let backgroundColor = UIColor(red: 0.96, green: 0.97, blue: 1.00, alpha: 1.00)
-    let textColor = UIColor(red: 0.64, green: 0.71, blue: 0.78, alpha: 1.00)
+    let backgroundColor = UIColor(red: 0.79, green: 0.84, blue: 0.87, alpha: 1.00)
+    let textColor = UIColor(red: 0.35, green: 0.37, blue: 0.39, alpha: 1.00)
     var blurView: UIVisualEffectView!
     let backgroundImageView = UIImageView()
     
