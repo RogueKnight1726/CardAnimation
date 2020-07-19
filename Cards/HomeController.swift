@@ -23,9 +23,24 @@ class HomeController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initViews()
+        
+        let tapGesture = UITapGestureRecognizer.init(target: self, action: #selector(tapDetected(sender:)))
+        cardOne.addGestureRecognizer(tapGesture)
+        
+        
+        let panGesture = UIPanGestureRecognizer.init(target: self, action: #selector(panDetected(sender:)))
+        view.addGestureRecognizer(panGesture)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(recievedDismissNotification), name: Notification.Name(NotificationNames.DetailDismiss.rawValue), object: nil)
+    }
+    
+    
+    func initViews(){
         let guide = view.safeAreaLayoutGuide
         view.backgroundColor = backgroundColor
         
+        print("Frme: \(view.frame)")
         
         view.addSubview(backgroundImageView)
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -62,8 +77,8 @@ class HomeController: UIViewController{
         
         view.addSubview(cardThree)
         cardThree.translatesAutoresizingMaskIntoConstraints = false
-        [cardThree.widthAnchor.constraint(equalToConstant: 300),
-         cardThree.heightAnchor.constraint(equalToConstant: 180),
+        [cardThree.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.724),
+         cardThree.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2),
          cardThree.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
          cardThree.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0)].forEach({$0.isActive = true})
         cardThree.layer.anchorPoint = CGPoint.init(x: 1, y: 1)
@@ -71,8 +86,8 @@ class HomeController: UIViewController{
         
         view.addSubview(cardTwo)
         cardTwo.translatesAutoresizingMaskIntoConstraints = false
-        [cardTwo.widthAnchor.constraint(equalToConstant: 300),
-         cardTwo.heightAnchor.constraint(equalToConstant: 180),
+        [cardTwo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.724),
+         cardTwo.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2),
          cardTwo.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
          cardTwo.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0)].forEach({$0.isActive = true})
         cardTwo.layer.anchorPoint = CGPoint.init(x: 1, y: 1)
@@ -80,26 +95,17 @@ class HomeController: UIViewController{
         
         view.addSubview(cardOne)
         cardOne.translatesAutoresizingMaskIntoConstraints = false
-        [cardOne.widthAnchor.constraint(equalToConstant: 300),
-         cardOne.heightAnchor.constraint(equalToConstant: 180),
+        [cardOne.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.724),
+         cardOne.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2),
          cardOne.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
          cardOne.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0)].forEach({$0.isActive = true})
         cardOne.image = UIImage.init(named: "cardOneImage")
-        
-        let tapGesture = UITapGestureRecognizer.init(target: self, action: #selector(tapDetected(sender:)))
-        cardOne.addGestureRecognizer(tapGesture)
-        
-        
-        let panGesture = UIPanGestureRecognizer.init(target: self, action: #selector(panDetected(sender:)))
-        view.addGestureRecognizer(panGesture)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(recievedDismissNotification), name: Notification.Name(NotificationNames.DetailDismiss.rawValue), object: nil)
     }
     
     
     func applyCardThreeInitialTransformState(){
         let cardOneAngle = 10 / 180.0 * CGFloat.pi
-        let transformOne = CGAffineTransform.init(translationX: 140, y: 40)
+        let transformOne = CGAffineTransform.init(translationX: 0.338 * view.frame.width, y: 0.044 * view.frame.height)
         let transformScaleOne = CGAffineTransform.init(scaleX: 0.80, y: 0.80)
         let transformRotateOne = CGAffineTransform.init(rotationAngle: cardOneAngle)
         let finalTransform = transformOne.concatenating(transformRotateOne).concatenating(transformScaleOne)
@@ -108,7 +114,7 @@ class HomeController: UIViewController{
     
     func applyCardTwoInitialTransform(){
         let angleInRadians = 5 / 180.0 * CGFloat.pi
-        let transform = CGAffineTransform.init(translationX: 150, y: 68)
+        let transform = CGAffineTransform.init(translationX: 0.362 * view.bounds.width, y: 0.075 * view.frame.height)
         let cardTwoScale = CGAffineTransform.init(scaleX: 0.90, y: 0.90)
         let cardTwoRotation = CGAffineTransform.init(rotationAngle: angleInRadians)
         let cardTwoFinalTransform = transform.concatenating(cardTwoRotation).concatenating(cardTwoScale)
@@ -131,14 +137,14 @@ class HomeController: UIViewController{
         var rotationAndPerspectiveTransform = CATransform3DIdentity
         rotationAndPerspectiveTransform.m34 = 1.0 / -500
         let cardThreePerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 45.0 * .pi / 180.0, 1.0, 0, 0.0)
-        let cardThreeLiftUpTransform = CATransform3DTranslate(cardThreePerspectiveTransform, (self.view.bounds.width / 2) - 50,-400, -50)
+        let cardThreeLiftUpTransform = CATransform3DTranslate(cardThreePerspectiveTransform, (self.view.bounds.width / 2) - (0.120 * self.view.frame.width),(-0.446 * self.view.frame.height), -50)
         
         let cardTwoPerspectiveTransform = CATransform3DRotate(rotationAndPerspectiveTransform, 35.0 * .pi / 180.0, 1.0, 0, 0.0)
-        let cardTwoLiftUpTransofrm = CATransform3DTranslate(cardTwoPerspectiveTransform, (self.view.bounds.width / 2) - 50,-170, -50)
+        let cardTwoLiftUpTransofrm = CATransform3DTranslate(cardTwoPerspectiveTransform, (self.view.bounds.width / 2) - (0.120 * self.view.frame.width),(-0.189 * self.view.frame.height), -50)
         
         UIView.animate(withDuration: 0.1, delay: 0, options: [], animations: {
-            self.cardTwo.transform = CGAffineTransform.identity.concatenating(CGAffineTransform.init(translationX: (self.view.bounds.width / 2) - 50, y: 90))
-            self.cardThree.transform = CGAffineTransform.identity.concatenating(CGAffineTransform.init(translationX: (self.view.bounds.width / 2) - 50, y: 90))
+            self.cardTwo.transform = CGAffineTransform.identity.concatenating(CGAffineTransform.init(translationX: (self.view.bounds.width / 2) - (0.120 * self.view.frame.width), y: 90))
+            self.cardThree.transform = CGAffineTransform.identity.concatenating(CGAffineTransform.init(translationX: (self.view.bounds.width / 2) - (0.120 * self.view.frame.width), y: 90))
         }) { (_) in
             UIView.animate(withDuration: 0.3, delay: 0, options: [], animations: {
                 cardThreeLayer.transform = cardThreeLiftUpTransform
