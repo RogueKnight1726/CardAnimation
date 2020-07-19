@@ -86,6 +86,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		585B2F2124C4E4E100A62F83 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				58EB409624C1FE3A0027FF4D /* HomeController.swift */,
+				585B2ED424C3057900A62F83 /* DetailController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		585B2F2224C4E4F600A62F83 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				58EB409424C1FE250027FF4D /* BaseView.swift */,
+				585B2EDE24C3609000A62F83 /* DragViewPlaceHolderView.swift */,
+				585B2EDC24C31FA400A62F83 /* BaseImageView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		58EB405824C1FE040027FF4D = {
 			isa = PBXGroup;
 			children = (
@@ -112,11 +131,8 @@
 				58EB406424C1FE040027FF4D /* AppDelegate.swift */,
 				58EB406624C1FE040027FF4D /* SceneDelegate.swift */,
 				585B2F1E24C40F9800A62F83 /* Utility.swift */,
-				58EB409624C1FE3A0027FF4D /* HomeController.swift */,
-				585B2ED424C3057900A62F83 /* DetailController.swift */,
-				58EB409424C1FE250027FF4D /* BaseView.swift */,
-				585B2EDE24C3609000A62F83 /* DragViewPlaceHolderView.swift */,
-				585B2EDC24C31FA400A62F83 /* BaseImageView.swift */,
+				585B2F2224C4E4F600A62F83 /* Views */,
+				585B2F2124C4E4E100A62F83 /* Controllers */,
 				58EB406A24C1FE040027FF4D /* Main.storyboard */,
 				58EB406D24C1FE060027FF4D /* Assets.xcassets */,
 				58EB406F24C1FE060027FF4D /* LaunchScreen.storyboard */,
